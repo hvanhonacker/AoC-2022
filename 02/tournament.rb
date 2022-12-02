@@ -26,42 +26,44 @@ class Tournament
     MOVES_HIERARCHY = MOVE_SCORE_VALUES.keys
 
     RESULT_SCORES = {
-      :loose => 0,
+      :lose => 0,
       :draw => 3,
       :win => 6,
     }
 
-    MOVES_MAPPING = {
-      'X' => :rock,
-      'Y' => :paper,
-      'Z' => :scissors,
+    OUTCOMES_MAPPING = {
+      'X' => :lose,
+      'Y' => :draw,
+      'Z' => :win,
+    }
 
+    MOVES_MAPPING = {
       'A' => :rock,
       'B' => :paper,
       'C' => :scissors,
     }
 
-    attr_reader :op_play, :our_play
+    attr_reader :op_play, :result
 
-    def initialize(op_play, our_play)
-      @op_play  = MOVES_MAPPING[op_play]
-      @our_play = MOVES_MAPPING[our_play]
+    def initialize(enc_op_play, enc_result)
+      @op_play = MOVES_MAPPING[enc_op_play]
+      @result = OUTCOMES_MAPPING[enc_result]
     end
 
     def score
       MOVE_SCORE_VALUES[our_play] + RESULT_SCORES[result]
     end
 
-    def result
+    def our_play
       op_idx  = MOVES_HIERARCHY.index(op_play)
-      our_idx = MOVES_HIERARCHY.index(our_play)
 
-      if op_idx == our_idx
-        :draw
-      elsif ((our_idx - 1) % 3) == op_idx
-        :win
-      else
-        :loose
+      case result
+      when :draw
+        op_play
+      when :win
+        MOVES_HIERARCHY[(op_idx + 1) % 3]
+      when :lose
+        MOVES_HIERARCHY[(op_idx - 1) % 3]
       end
     end
   end
