@@ -21,9 +21,7 @@ crates_map = res
 moves.each do |move|
   number, start, arrival = move.scan(/move (\d+) from (\d+) to (\d+)/).first.map(&:to_i)
 
-  number.times do
-    crates_map[arrival-1] << crates_map[start-1].pop
-  end
+  crates_map[arrival-1] += crates_map[start-1].pop(number)
 end
 
 puts crates_map.map{_1.last}.join ''
