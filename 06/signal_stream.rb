@@ -8,12 +8,16 @@ class SignalStream
   attr_reader :stream
 
   def chars_before_start_of_packet_detection
-    start_of_packet_position + 1
+    first_position_for_a_set_of_n_distinct_symbols(4) + 1
   end
 
-  def start_of_packet_position
-    i = 3
-    while Set.new(stream[(i-3)..i].chars).size < 4
+  def chars_before_start_of_message_detection
+    first_position_for_a_set_of_n_distinct_symbols(14) + 1
+  end
+
+  def first_position_for_a_set_of_n_distinct_symbols(n)
+    i = n - 1
+    while Set.new(stream[(i-(n-1))..i].chars).size < n
       i += 1
     end
     i
