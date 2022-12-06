@@ -1,5 +1,3 @@
-require 'set'
-
 class SignalStream
   def initialize(stream)
     @stream = stream
@@ -17,7 +15,7 @@ class SignalStream
 
   def first_position_for_a_set_of_n_distinct_symbols(n)
     i = n - 1
-    while Set.new(stream[(i-(n-1))..i].chars).size < n
+    while stream[(i-(n-1))..i].chars.uniq.size < n
       i += 1
     end
     i
