@@ -3,19 +3,36 @@ require 'byebug'
 class DiskManager
   attr_reader :commands, :cur_dir
 
+  MAX_SIZE       = 70000000
+  REQ_FREE_SPACE = 30000000
+
   def initialize(commands)
     @commands = commands
+
+    build_file_structure
   end
 
   def sum_of_folders(max_size: 100_000)
-    root_dir = build_directory_structure
-
-    # root_dir.print
-
-    root_dir.sizes.select {|size| size <= max_size }.sum
+    @root_dir.sizes.select {|size| size <= max_size }.sum
   end
 
-  def build_directory_structure
+  def size_of_the_dir_to_delete
+    @root_dir.sizes.sort.detect { |dir_size| dir_size >= size_to_be_freed }
+  end
+
+  def print
+    @root_dir.print
+  end
+
+  def size_to_be_freed
+    @size_to_be_freed ||= [REQ_FREE_SPACE - unused_space, 0].max
+  end
+
+  def unused_space
+    MAX_SIZE - @root_dir.size
+  end
+
+  def build_file_structure
     @root_dir, @cur_dir = nil
 
     commands.each do |cmd|
@@ -89,6 +106,10 @@ class Dir
     direct_children_sizes = children_sizes.map(&:first)
 
     [own_files_size + direct_children_sizes.sum] + children_sizes.flatten
+  end
+
+  def size
+    sizes.first
   end
 
   def own_files_size

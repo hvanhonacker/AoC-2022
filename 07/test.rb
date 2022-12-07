@@ -8,6 +8,12 @@ class DiskManagerTest < Minitest::Test
     assert_equal 95437, res
   end
 
+  def test_size_of_the_dir_to_delete
+    res = DiskManager.new(File.read('input-test.txt').split(/\n/)).size_of_the_dir_to_delete
+
+    assert_equal 24933642, res
+  end
+
   def test_easy
     commands = <<~CMDS
       $ cd /
