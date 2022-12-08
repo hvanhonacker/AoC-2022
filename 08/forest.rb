@@ -38,8 +38,8 @@ class Forest
   def scenic_score_in_line(i, line)
     return 0 if i == 0 || i == (line.size - 1)
 
-    looking_left = line[0..i].reverse
-    looking_right = line[i..-1]
+    looking_left = line[..i].reverse
+    looking_right = line[i..]
 
     scenic_score_ahead(looking_left) * scenic_score_ahead(looking_right)
   end
@@ -62,7 +62,7 @@ class Forest
   def tree_visible_in_line?(i, line)
     return true if i == 0 || i == (line.size - 1)
 
-    line[0..(i-1) ].none? { |h| h >= line[i] } ||
-    line[(i+1)..-1].none? { |h| h >= line[i] }
+    line[...i].none? { |h| h >= line[i] } ||
+    line[i+1..].none? { |h| h >= line[i] }
   end
 end
