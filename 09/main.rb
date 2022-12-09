@@ -1,7 +1,7 @@
 require 'matrix'
 
-h = t = Vector[0, 0]
-t_pos = [t]
+rope = Array.new(10) { Vector[0, 0] }
+t_pos = [rope.last]
 
 V = {
   "R" => Vector[1,0],
@@ -10,12 +10,12 @@ V = {
   "D" => Vector[0,-1]
 }
 
-def move_tail(tail, head)
-  delta = head-tail
-  delta[0] = delta[0] / delta[0].abs if delta[0] !=0
-  delta[1] = delta[1] / delta[1].abs if delta[1] !=0
+def move_ahead(cur, ahead)
+  delta = ahead-cur
+  delta[0] = delta[0] / delta[0].abs unless delta[0].zero?
+  delta[1] = delta[1] / delta[1].abs unless delta[1].zero?
 
-  tail + delta
+  cur + delta
 end
 
 def infinite_norm(v)
@@ -26,10 +26,22 @@ File.read('input.txt').split(/\n/).each do |move|
   dir, n = move.split(' ')
 
   n.to_i.times do
-    h += V[dir]
-    t = infinite_norm(h-t) <= 1 ? t : move_tail(t, h)
-    t_pos << t
+    moved_rope = []
+
+    rope.each_with_index do |knot, i|
+      if i == 0
+        moved_rope << knot + V[dir]
+      else
+        ahead = moved_rope[i-1]
+        moved_rope << (infinite_norm(ahead-knot) <= 1 ? knot : move_ahead(knot, ahead))
+      end
+    end
+
+    rope = moved_rope
+
+    t_pos << rope.last
   end
 end
 
 puts t_pos.uniq.size
+# 2661
