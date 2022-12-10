@@ -18,7 +18,7 @@ class ElvesCRT
     sprite_pos = (i-1..i+1)
 
     output[line] = [] if px_pos == 0
-    output[line][cycle % LINE_CYCLE] = sprite_pos.include?(px_pos) ? '#' : '.'
+    output[line] << (sprite_pos.include?(px_pos) ? '#' : '.')
 
     @cycle += 1
   end
