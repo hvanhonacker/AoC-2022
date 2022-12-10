@@ -1,19 +1,12 @@
-class ElvesCpu
+class ElvesCPU
 
-  def initialize(instructions)
-    @instructions = instructions
+  def initialize
+    @devices = []
   end
 
-  attr_reader :instructions, :reg_vals
+  attr_reader :reg_vals, :reg_val
 
-  def reg_values_checksum
-    (0..5).map do |n|
-      cycle = 20 + n * 40
-      reg_vals[cycle] * cycle
-    end.sum
-  end
-
-  def run
+  def run(instructions)
     @reg_val = 1
     @reg_vals = [@reg_val]
 
@@ -31,6 +24,13 @@ class ElvesCpu
     self
   end
 
+  def reg_values_checksum
+    (0..5).map do |n|
+      cycle = 20 + n * 40
+      reg_vals[cycle] * cycle
+    end.sum
+  end
+
   def addx(x)
     2.times { tick }
 
@@ -41,7 +41,13 @@ class ElvesCpu
     tick
   end
 
+  def plug(device)
+    @devices << device
+  end
+
   def tick
     @reg_vals << @reg_val
+
+    @devices.each(&:tick)
   end
 end
