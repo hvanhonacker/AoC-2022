@@ -7,13 +7,13 @@ DIR_VECT = {
   "D" => Vector[ 0, -1]
 }
 
+def inf_norm(v)
+  [v[0].abs, v[1].abs].max
+end
+
 def knot_move(v)
   Vector[v[0].zero? ? v[0] : v[0] / v[0].abs,
          v[1].zero? ? v[1] : v[1] / v[1].abs]
-end
-
-def inf_norm(v)
-  [v[0].abs, v[1].abs].max
 end
 
 # rope = Array.new(2) { Vector[0, 0] } # part 1
