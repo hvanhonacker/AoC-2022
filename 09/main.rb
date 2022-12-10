@@ -1,8 +1,5 @@
 require 'matrix'
 
-rope = Array.new(10) { Vector[0, 0] }
-t_pos = [rope.last]
-
 V = {
   "R" => Vector[1,0],
   "L" => Vector[-1,0],
@@ -22,6 +19,9 @@ def infinite_norm(v)
   [v[0].abs, v[1].abs].max
 end
 
+rope = Array.new(10) { Vector[0, 0] }
+t_pos = [rope.last]
+
 File.read('input.txt').split(/\n/).each do |move|
   dir, n = move.split(' ')
 
@@ -29,12 +29,12 @@ File.read('input.txt').split(/\n/).each do |move|
     moved_rope = []
 
     rope.each_with_index do |knot, i|
-      if i == 0
-        moved_rope << knot + V[dir]
-      else
-        ahead = moved_rope[i-1]
-        moved_rope << (infinite_norm(ahead-knot) <= 1 ? knot : move_ahead(knot, ahead))
-      end
+      moved_rope <<
+        if i == 0
+          knot + V[dir]
+        else
+          infinite_norm(moved_rope[i-1]-knot) <= 1 ? knot : move_ahead(knot, moved_rope[i-1])
+        end
     end
 
     rope = moved_rope
