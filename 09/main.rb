@@ -1,20 +1,18 @@
 require 'matrix'
 
 DIR_VECT = {
-  "R" => Vector[1,0],
-  "L" => Vector[-1,0],
-  "U" => Vector[0,1],
-  "D" => Vector[0,-1]
+  "R" => Vector[ 1,  0],
+  "L" => Vector[-1,  0],
+  "U" => Vector[ 0,  1],
+  "D" => Vector[ 0, -1]
 }
 
-def knot_move_mod(v)
-  v[0] = v[0] / v[0].abs unless v[0].zero?
-  v[1] = v[1] / v[1].abs unless v[1].zero?
-
-  v
+def knot_move(v)
+  Vector[v[0].zero? ? v[0] : v[0] / v[0].abs,
+         v[1].zero? ? v[1] : v[1] / v[1].abs]
 end
 
-def infinite_norm(v)
+def inf_norm(v)
   [v[0].abs, v[1].abs].max
 end
 
@@ -32,7 +30,11 @@ File.read('input.txt').split(/\n/).each do |move|
         if i == 0
           knot + DIR_VECT[dir]
         else
-          infinite_norm(moved_rope[i-1] - knot) <= 1 ? knot : knot + knot_move_mod(moved_rope[i-1] - knot)
+          if inf_norm(moved_rope[i-1] - knot) > 1
+            knot + knot_move(moved_rope[i-1] - knot)
+          else
+            knot
+          end
         end
     end
 
