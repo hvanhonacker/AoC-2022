@@ -1,18 +1,19 @@
 require 'matrix'
 
-V = {
+DIR_VECT = {
   "R" => Vector[1,0],
   "L" => Vector[-1,0],
   "U" => Vector[0,1],
   "D" => Vector[0,-1]
 }
 
-def move_ahead(cur, ahead)
-  delta = ahead-cur
+def move_toward(pos, dest)
+  delta = dest-pos
+
   delta[0] = delta[0] / delta[0].abs unless delta[0].zero?
   delta[1] = delta[1] / delta[1].abs unless delta[1].zero?
 
-  cur + delta
+  pos + delta
 end
 
 def infinite_norm(v)
@@ -31,9 +32,9 @@ File.read('input.txt').split(/\n/).each do |move|
     rope.each_with_index do |knot, i|
       moved_rope <<
         if i == 0
-          knot + V[dir]
+          knot + DIR_VECT[dir]
         else
-          infinite_norm(moved_rope[i-1]-knot) <= 1 ? knot : move_ahead(knot, moved_rope[i-1])
+          infinite_norm(moved_rope[i-1]-knot) <= 1 ? knot : move_toward(knot, moved_rope[i-1])
         end
     end
 
