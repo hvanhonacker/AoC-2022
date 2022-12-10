@@ -16,7 +16,8 @@ def inf_norm(v)
   [v[0].abs, v[1].abs].max
 end
 
-rope = Array.new(10) { Vector[0, 0] }
+# rope = Array.new(2) { Vector[0, 0] } # part 1
+rope = Array.new(10) { Vector[0, 0] } # part 2
 t_pos = [rope.last]
 
 File.read('input.txt').split(/\n/).each do |move|
@@ -43,4 +44,5 @@ File.read('input.txt').split(/\n/).each do |move|
 end
 
 puts t_pos.uniq.size
-# 2661
+# part 1: 6284
+# part 2: 2661
