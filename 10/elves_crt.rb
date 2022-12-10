@@ -10,25 +10,26 @@ class ElvesCRT
     self
   end
 
-  LINE_CYCLE = 40
-
   def tick
-    i = @cpu.reg_val
+    px_pos = (cycle - 1) % LINE_CYCLE
+    line = (cycle - 1) / LINE_CYCLE
 
+    i = cpu.reg_val
     sprite_pos = (i-1..i+1)
 
-    px_pos = (@cycle - 1) % LINE_CYCLE
-    line = (@cycle - 1) / LINE_CYCLE
-
-    #puts "#cycl: #{@cycle} - line: #{line} - px: #{px_pos}"
-
-    @output[line] = [] if px_pos == 0
-    @output[line][@cycle%40] = sprite_pos.include?(px_pos) ? '#' : '.'
+    output[line] = [] if px_pos == 0
+    output[line][cycle % LINE_CYCLE] = sprite_pos.include?(px_pos) ? '#' : '.'
 
     @cycle += 1
   end
 
   def to_s
-    @output.map(&:join).join("\n")
+    output.map(&:join).join("\n")
   end
+
+  private
+
+  LINE_CYCLE = 40
+
+  attr_reader :cpu, :cycle, :output
 end
