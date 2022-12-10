@@ -7,13 +7,11 @@ DIR_VECT = {
   "D" => Vector[0,-1]
 }
 
-def move_toward(pos, dest)
-  delta = dest - pos
+def knot_move_mod(v)
+  v[0] = v[0] / v[0].abs unless v[0].zero?
+  v[1] = v[1] / v[1].abs unless v[1].zero?
 
-  delta[0] = delta[0] / delta[0].abs unless delta[0].zero?
-  delta[1] = delta[1] / delta[1].abs unless delta[1].zero?
-
-  pos + delta
+  v
 end
 
 def infinite_norm(v)
@@ -34,7 +32,7 @@ File.read('input.txt').split(/\n/).each do |move|
         if i == 0
           knot + DIR_VECT[dir]
         else
-          infinite_norm(moved_rope[i-1] - knot) <= 1 ? knot : move_toward(knot, moved_rope[i-1])
+          infinite_norm(moved_rope[i-1] - knot) <= 1 ? knot : knot + knot_move_mod(moved_rope[i-1] - knot)
         end
     end
 
