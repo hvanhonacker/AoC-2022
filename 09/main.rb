@@ -29,8 +29,8 @@ File.read('input.txt').split(/\n/).each do |move|
       moved_rope <<
         if i == 0
           knot + DIR_VECT[dir]
-        elsif inf_norm(moved_rope[i-1] - knot) > 1
-          knot + knot_move(moved_rope[i-1] - knot)
+        elsif inf_norm(delta = moved_rope[i-1] - knot) > 1
+          knot + knot_move(delta)
         else
           knot
         end
