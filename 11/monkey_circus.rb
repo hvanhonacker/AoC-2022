@@ -12,4 +12,8 @@ class MonkeyCircus
   end
 
   attr_reader :monkeys
+
+  # def round
+  #   monkeys.each
+  # end
 end

@@ -27,9 +27,27 @@ class Monkey
     @test = test
     @test_true = test_true
     @test_false = test_false
+    @inspected_items_count = 0
   end
 
-  attr_reader :id, :items, :op, :test, :test_true, :test_false
+  attr_reader :id, :items, :op, :test, :test_true, :test_false, :inspected_items_count
+  def round
+    while items.delete_at(0)
+                &.then { |it| @inspected_items_count += 1; it }
+                &.then { |it| op.call(it) }
+                &.then { |it| it / 3 }
+                &.tap  { |it| yield(it, target_mnk(it)) if block_given? }; end
+
+    self
+  end
+
+  def get_bored(item)
+    item / 3
+  end
+
+  def target_mnk(item)
+    test.call(item) ? test_true : test_false
+  end
 
   private
 
