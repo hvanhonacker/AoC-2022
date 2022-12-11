@@ -1,6 +1,4 @@
 
 require_relative "monkey_circus"
 
-circus = MonkeyCircus.parse('input.txt')
-
-p circus
+p MonkeyCircus.parse('input.txt').play_rounds(20).monkey_business_level

@@ -4,9 +4,9 @@ require_relative "monkey_circus"
 require_relative "monkey"
 
 class TestMonkeyCircus < MiniTest::Test
-  # def test_monkey_business_level
-  #   assert_equal MonkeyCircus.new().play_rounds.monkey_business_level
-  # end
+  def test_monkey_business_level
+    assert_equal 10605, MonkeyCircus.parse('input-test.txt').play_rounds(20).monkey_business_level
+  end
 
   def test_monkey_circus_parsing
     circus = MonkeyCircus.parse('input-test.txt')
