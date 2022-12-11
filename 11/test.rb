@@ -4,6 +4,10 @@ require_relative "monkey_circus"
 require_relative "monkey"
 
 class TestMonkeyCircus < MiniTest::Test
+  def test_monkey_business_level_part_2
+    assert_equal 2713310158, MonkeyCircus.parse('input-test.txt').part_2.play_rounds(10_000).monkey_business_level
+  end
+
   def test_monkey_business_level
     assert_equal 10605, MonkeyCircus.parse('input-test.txt').play_rounds(20).monkey_business_level
   end
@@ -60,8 +64,7 @@ class TestMonkeyCircus < MiniTest::Test
     assert_equal 1, mnk.id
     assert_equal [66, 52, 59, 79, 94, 73], mnk.items
     assert_equal 2 + 1, mnk.op.call(2)
-    assert_equal false, mnk.test.call(20)
-    assert_equal true, mnk.test.call(19)
+    assert_equal 19, mnk.divider
     assert_equal 4, mnk.test_true
     assert_equal 6, mnk.test_false
   end
