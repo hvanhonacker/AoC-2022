@@ -24,7 +24,7 @@ class SignalWalker
   end
 
   def rec_explore(current)
-    dump
+    # dump
 
     unvisited_neighbours(current).each do |neighbour|
       add_unvisited(neighbour)
@@ -34,7 +34,7 @@ class SignalWalker
     visited!(current)
 
     if(val(current) == DESTINATION)
-      dump
+      # dump
       tentative_value(current)
     elsif unvisited.empty?
       nil
@@ -44,8 +44,6 @@ class SignalWalker
       rec_explore(current)
     end
   end
-
-
 
   def unvisited_neighbours(node)
     neighbours(node)
@@ -90,7 +88,7 @@ class SignalWalker
     from_val >= to_val - 1
   end
 
-  CHAR_VALUES = ('a'..'z').to_a.zip(0..25).to_h.merge({ START => -1, DESTINATION => 26 })
+  CHAR_VALUES = ('a'..'z').to_a.zip(1..26).to_h.merge({ START => 0, DESTINATION => 26 })
 
   def val(point)
     map[point[0]][point[1]]
