@@ -16,15 +16,16 @@ class SignalWalker
   attr_reader :map, :unvisited, :tentative_map, :visited_map
 
   def explore
-    start = locate(START)
+    start = locate(DESTINATION)
 
     update_tentative_value(start, 0)
 
     rec_explore(start)
+
+    collect_char_tentatives('a').sort.first
   end
 
   def rec_explore(current)
-    # dump
 
     unvisited_neighbours(current).each do |neighbour|
       add_unvisited(neighbour)
@@ -33,10 +34,7 @@ class SignalWalker
 
     visited!(current)
 
-    if(val(current) == DESTINATION)
-      # dump
-      tentative_value(current)
-    elsif unvisited.empty?
+    if unvisited.empty?
       nil
     else
       current = unvisited.sort_by { |node| tentative_value(node) }.first
@@ -85,7 +83,7 @@ class SignalWalker
     from_val = CHAR_VALUES[val(from_point)]
     to_val = CHAR_VALUES[val(to_point)]
 
-    from_val >= to_val - 1
+    from_val - 1 <= to_val
   end
 
   CHAR_VALUES = ('a'..'z').to_a.zip(1..26).to_h.merge({ START => 0, DESTINATION => 26 })
@@ -116,6 +114,20 @@ class SignalWalker
     nil
   end
 
+  def collect_char_tentatives(char)
+    res = []
+
+    map.each_with_index do |line, i|
+      line.each_with_index do |el, j|
+        if el == char
+          res << tentative_value(Vector[i, j])
+        end
+      end
+    end
+
+    res
+  end
+
   UP = Vector[1, 0]
   DOWN = Vector[-1, 0]
   LEFT = Vector[0, -1]
@@ -135,22 +147,22 @@ class SignalWalker
     end
   end
 
-  # def dump
-  #   puts ""
+  def dump_tentatives
+    puts ""
 
-  #   tentative_map.each do |line|
-  #     puts line.map { |v|
-  #       if v == Float::INFINITY
-  #         "..."
-  #       elsif v < 10
-  #         "  #{v}"
-  #       elsif v < 100
-  #         " #{v}"
-  #       else
-  #         v
-  #       end
-  #     }.join ' '
-  #   end
-  # end
+    tentative_map.each do |line|
+      puts line.map { |v|
+        if v == Float::INFINITY
+          "..."
+        elsif v < 10
+          "  #{v}"
+        elsif v < 100
+          " #{v}"
+        else
+          v
+        end
+      }.join ' '
+    end
+  end
 
 end
