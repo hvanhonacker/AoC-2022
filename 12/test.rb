@@ -5,10 +5,6 @@ require_relative "signal_walker"
 
 class TestSignalWalker < Minitest::Test
   def test_min_path_test_data
-    #assert_equal 31, SignalWalker.parse("input-test.txt").min_path.size
-  end
-
-  def test_min_path_test_data
     assert_equal 31, SignalWalker.parse("input-test.txt").min_path_size
   end
 
