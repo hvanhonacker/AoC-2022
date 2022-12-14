@@ -1,10 +1,10 @@
-DEBUG = true
+DEBUG = false
 
 def checksum(pairs)
   pairs.map.with_index {|pair, i| puts "\n== Pair #{i + 1} ==" if DEBUG; check(*pair) ? i + 1 : nil }.compact.sum
 end
 
-def check (left, right)
+def check(left, right)
   rec_check(left, right) == :OK
 end
 
@@ -13,7 +13,7 @@ def rec_check(left, right, idt = "")
 
   case [left, right]
   in[nil,_]
-    puts "#{idt}- Left side ran out of items, so inputs are in the right order"
+    puts "#{idt}- Left side ran out of items, so inputs are in the right order" if DEBUG
     :OK
   in [_, nil]
     puts "#{idt}- Right side ran out of items, so inputs are not in the right order" if DEBUG
@@ -35,7 +35,7 @@ def rec_check(left, right, idt = "")
     puts "#{idt}  - Mixed types; convert right to [#{r}] and retry comparison" if DEBUG
     rec_check(l, Array(r), idt + "  ")
   in [Array => l, Array => r]
-    l << nil while l.size < r.size
-    l.zip(r).detect { |lft, rgt| res = rec_check(lft, rgt, idt + "  "); break res if res }
+    padding = Array.new([r.size - l.size, 0].max)
+    (l +padding ).zip(r).detect { |lft, rgt| res = rec_check(lft, rgt, idt + "  "); break res if res }
   end
 end

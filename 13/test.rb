@@ -5,6 +5,41 @@ require "byebug"
 require_relative "signal_checker"
 
 class SignalCheckerTest < Minitest::Test
+  def test_sort
+    input = <<~TEXT
+      [1,1,3,1,1]
+      [1,1,5,1,1]
+
+      [[1],[2,3,4]]
+      [[1],4]
+
+      [9]
+      [[8,7,6]]
+
+      [[4,4],4,4]
+      [[4,4],4,4,4]
+
+      [7,7,7,7]
+      [7,7,7]
+
+      []
+      [3]
+
+      [[[]]]
+      [[]]
+
+      [1,[2,[3,[4,[5,6,7]]]],8,9]
+      [1,[2,[3,[4,[5,6,0]]]],8,9]
+    TEXT
+
+    packets = input.split(/\n/).reject { _1 == ""}.map { JSON.parse(_1) }
+    packets << [[2]]
+    packets << [[6]]
+    packets = packets.sort { |p1, p2| check(p1, p2) ? -1 : 1 }
+
+    assert_equal 140, (packets.index([[2]]) + 1) * (packets.index([[6]]) + 1)
+  end
+
   def test_checksum
     input = <<~TEXT
       [1,1,3,1,1]
