@@ -30,18 +30,20 @@ class World
     end
   end
 
-  def initialize(x_min, x_max, y_min, y_max)
-    @x_min = x_min
-    @x_max = x_max
-    @y_min = y_min
-    @y_max = y_max
+  FLOOR_Y_OFFSET = 2
 
-    puts "Dimensions [#{x_min}-#{x_max} x #{y_min}-#{y_max}]" if DEBUG
+  def initialize(x_min, x_max, y_min, y_max)
+    @y_min = y_min
+    @y_max = y_max + FLOOR_Y_OFFSET
+    @x_min = SOURCE_POS[0] - (@y_max - @y_min)
+    @x_max = SOURCE_POS[0] + (@y_max - @y_min)
+
+    puts "Dimensions [#{x_min}-#{x_max} x #{y_min}-#{y_max}]"# if DEBUG
 
     @world = Array.new(@x_max + 1 - @x_min) { Array.new(@y_max + 1 - @y_min) }
     @sand_grains_count = 0
 
-    add_source
+    # add_source
   end
 
   attr_reader :x_min, :x_max, :y_min, :y_max, :world, :sand_grains_count
@@ -57,14 +59,12 @@ class World
 
   def free?(x, y)
     puts "#{x}, #{y} free?" if DEBUG
+
+    return false if y >= y_max
+
     (!world[x - x_min][y - y_min]).tap do |res|
       puts res if DEBUG
     end
-  end
-
-  def abyss?(x, y)
-    x < x_min || x >= x_max ||
-    y < y_min || y >= y_max
   end
 
   def add_source
@@ -105,13 +105,13 @@ class World
     i = 1
 
     loop do
-      while sand.move && !(abyss = abyss?(*sand.pos)); end
-
-      break if abyss
+      while sand.move && sand.pos != source; end
 
       @sand_grains_count += 1
 
       put_sand(*sand.pos)
+
+      break if sand.pos == source
 
       sand.move_to(source) # reset sand position
 
@@ -140,7 +140,7 @@ class World
     def move
       MOVES
         .detect do |move|
-          (world.free?(*(new_pos = pos + move).to_a) || world.abyss?(*pos.to_a)) && move_to(new_pos)
+          world.free?(*(new_pos = pos + move).to_a) && move_to(new_pos)
         end
     end
 
