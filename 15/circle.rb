@@ -14,11 +14,14 @@ class Circle
 
   attr_reader :sensor_pos, :beacon_pos
 
-  def intersect_y(y)
+  def intersect_y(y, x_min: -Float::INFINITY, x_max: Float::INFINITY)
     xs, ys = sensor_pos.to_a
 
     x_inf = xs - (radius - (ys - y).abs)
     x_sup = xs + (radius - (ys - y).abs)
+
+    x_inf = [x_min, x_inf].max
+    x_sup = [x_max, x_sup].min
 
     Range.new(*[x_inf, x_sup])
   end
